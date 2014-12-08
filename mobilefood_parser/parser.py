@@ -248,27 +248,29 @@ class UnicaParser(Parser):
 
         Returns: Parsed restaurant datas
         """
-        try:
-            page = load_page(rest_urls.UNICA_BASE_URL)
+        page = load_page(rest_urls.UNICA_BASE_URL)
+        if(page != -1): 
             soup = bs(page, from_encoding='utf-8')
             restaurant_elements = soup.select("div#maplist ul.append-bottom li.color")
             restaurants = []
             for restaurant in restaurant_elements:
-                name = encode_remove_eol(restaurant.strong.get_text())
-                address = encode_remove_eol(restaurant.attrs['data-address'])
-                zip_code = encode_remove_eol(restaurant.attrs['data-zip'])
-                post_office = encode_remove_eol(restaurant.attrs['data-city'])
-                longitude = encode_remove_eol(restaurant.attrs['data-longitude'])
-                latitude = encode_remove_eol(restaurant.attrs['data-latitude'])
-                restaurants.append({'name': name, 'address': address, 'zip': zip_code,
-                    'postOffice': post_office, 'longitude': longitude, 'latitude': latitude, 'lunchTimes': self.opening_hours[name]})
-                # print("Name: {0}, address: {1}, zip: {2}, longitude: {3}, latitude: {4}".format(
-                #     name, address, zip_code, longitude, latitude))
-            # print(data)
-            return restaurants
-        except Exception, e:
-            LOG.exception(" Exception occured while parsing restaurant\n %s", str(e))
-            return []
+                try:
+                    name = encode_remove_eol(restaurant.strong.get_text())
+                    address = encode_remove_eol(restaurant.attrs['data-address'])
+                    zip_code = encode_remove_eol(restaurant.attrs['data-zip'])
+                    post_office = encode_remove_eol(restaurant.attrs['data-city'])
+                    longitude = encode_remove_eol(restaurant.attrs['data-longitude'])
+                    latitude = encode_remove_eol(restaurant.attrs['data-latitude'])
+                    restaurants.append({'name': name, 'address': address, 'zip': zip_code,
+                        'postOffice': post_office, 'longitude': longitude, 'latitude': latitude, 'lunchTimes': self.opening_hours[name]})
+                    # print("Name: {0}, address: {1}, zip: {2}, longitude: {3}, latitude: {4}".format(
+                    #     name, address, zip_code, longitude, latitude))
+                except Exception, e:
+                    LOG.exception(" Exception occured while parsing restaurant\n %s", str(e))
+                    return []
+                # print(data)
+                return restaurants
+        return []
 
 # 
 # Static methods
