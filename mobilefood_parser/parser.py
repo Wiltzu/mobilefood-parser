@@ -268,7 +268,7 @@ class UnicaParser(Parser):
             return restaurants
         except Exception, e:
             LOG.exception(" Exception occured while parsing restaurant\n %s", str(e))
-            return -1
+            return []
 
 # 
 # Static methods
