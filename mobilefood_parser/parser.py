@@ -222,7 +222,7 @@ class UnicaParser(Parser):
 
                 opening_hours.append(OpeningHours(dates, times))
             else:
-                break
+                continue
         #TODO: if empty, log some error
 
         print(opening_hours)
@@ -261,13 +261,14 @@ class UnicaParser(Parser):
                     post_office = encode_remove_eol(restaurant.attrs['data-city'])
                     longitude = encode_remove_eol(restaurant.attrs['data-longitude'])
                     latitude = encode_remove_eol(restaurant.attrs['data-latitude'])
+                    lunch_times = self.opening_hours[name] if name in self.opening_hours else []
                     restaurants.append({'name': name, 'address': address, 'zip': zip_code,
-                        'postOffice': post_office, 'longitude': longitude, 'latitude': latitude, 'lunchTimes': self.opening_hours[name]})
+                        'postOffice': post_office, 'longitude': longitude, 'latitude': latitude, 'lunchTimes': lunch_times})
                     # print("Name: {0}, address: {1}, zip: {2}, longitude: {3}, latitude: {4}".format(
                     #     name, address, zip_code, longitude, latitude))
                 except Exception, e:
                     LOG.exception(" Exception occured while parsing restaurant\n %s", str(e))
-                    return []
+                    continue
                 # print(data)
             return restaurants
         else:
